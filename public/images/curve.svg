@@ -1,0 +1,20 @@
+<svg width="1100" height="320" viewBox="0 0 1120 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Curve -->
+  <path d="M1.86426 3.3418C56.433 32.7242 177.099 99.3704 223.213 130.896C280.856 170.303 446.868 271.931 526.415 281.265C590.053 288.731 630.557 284.376 642.854 281.265C673.213 274.697 746.15 257.828 795.032 242.895C856.133 224.228 993.323 160.97 1072.87 142.303" 
+        stroke="url(#paint0_linear_6420_1966)" stroke-width="7.27279"/>
+
+  <!-- Nodes with stroke -->
+  <circle cx="223" cy="131" r="12" fill="#00B5C8" stroke="#007B85" stroke-width="10"/>
+  <circle cx="460" cy="260" r="12" fill="#00B5C8" stroke="#007B85" stroke-width="10"/>
+  <circle cx="730" cy="257" r="12" fill="#00B5C8" stroke="#007B85" stroke-width="10"/>
+  <circle cx="950" cy="185" r="12" fill="#00B5C8" stroke="#007B85" stroke-width="10"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_6420_1966" x1="1.86426" y1="3.3418" x2="1072.87" y2="144.365" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#008695" stop-opacity="0"/>
+      <stop offset="0.147434" stop-color="#008695"/>
+      <stop offset="0.894798" stop-color="#008695"/>
+      <stop offset="1" stop-color="#008695" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
