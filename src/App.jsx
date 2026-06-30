@@ -190,8 +190,71 @@ function getArcPositions(keys, stageRect, svgRect) {
   });
 }
 
+// ─── Translations ───────────────────────────────────────────────
+const translations = {
+  en: {
+    headerTitle: "Dynamic Unified Data Platform",
+    portraitTitle: "Fujairah Environment Authority Dynamic Unified Data Platform",
+    login: "Login",
+    comingSoon: "Coming Soon!",
+    explorMore: "Explore More",
+    footerOrg: "FUJAIRAH ENVIRONMENT AUTHORITY",
+    footerCopy: "Copyright 2025 Fujairah Environment Authority. All rights reserved.",
+    fujText: "Fujairah",
+    langBtn: "عربي",
+    menuItems: [
+      "Biodiversity", "Marine Water Quality",
+      "Air Quality Monitoring System", "Waste Management",
+      "Weather Monitoring System", "Underground Monitoring",
+      "e-Services", "Soil Monitoring System"
+    ],
+    nodes: {
+      soil:       { label: "Soil Monitoring System",          details: "Provides real-time soil health data to sustain agriculture and food security." },
+      biodiv:     { label: "Biodiversity",                    details: "Showcases Fujairah's rich habitats and species to support conservation." },
+      marine:     { label: "Marine Water Quality",            details: "Monitors salinity, pH, and pollutants to protect marine ecosystems." },
+      air:        { label: "Air Quality Monitoring System",   details: "Tracks real-time air pollutants to ensure cleaner, healthier skies." },
+      waste:      { label: "Waste Management",                details: "Tracks collection, recycling, and disposal for sustainable waste management." },
+      weather:    { label: "Weather Monitoring System",       details: "Delivers accurate weather insights for better planning and preparedness." },
+      underground:{ label: "Underground Monitoring",          details: "Manages wells and tankers for efficient groundwater use and distribution." },
+      epermit:    { label: "e-Services",                      details: "Offers citizens and businesses easy access to environmental services anytime." },
+    }
+  },
+  ar: {
+    headerTitle: "منصة البيانات الموحدة الديناميكية",
+    portraitTitle: "هيئة بيئة الفجيرة - منصة البيانات الموحدة الديناميكية",
+    login: "تسجيل الدخول",
+    comingSoon: "قريباً!",
+    explorMore: "استكشف المزيد",
+    footerOrg: "هيئة بيئة الفجيرة",
+    footerCopy: "حقوق النشر 2025 هيئة بيئة الفجيرة. جميع الحقوق محفوظة.",
+    fujText: "Fujairah",
+    langBtn: "English",
+    menuItems: [
+      "التنوع البيولوجي", "جودة مياه البحر",
+      "نظام مراقبة جودة الهواء", "إدارة النفايات",
+      "نظام مراقبة الطقس", "المراقبة تحت الأرض",
+      "الخدمات الإلكترونية", "نظام مراقبة التربة"
+    ],
+    nodes: {
+      soil:       { label: "نظام مراقبة التربة",              details: "يوفر بيانات صحة التربة في الوقت الفعلي لدعم الزراعة والأمن الغذائي." },
+      biodiv:     { label: "التنوع البيولوجي",                details: "يعرض الموائل والأنواع الغنية في الفجيرة لدعم الحفاظ عليها." },
+      marine:     { label: "جودة مياه البحر",                 details: "يرصد الملوحة ودرجة الحموضة والملوثات لحماية النظم البيئية البحرية." },
+      air:        { label: "نظام مراقبة جودة الهواء",         details: "يتتبع ملوثات الهواء في الوقت الفعلي لضمان سماء أكثر نظافةً وصحة." },
+      waste:      { label: "إدارة النفايات",                  details: "يتتبع جمع النفايات وإعادة تدويرها والتخلص منها بشكل مستدام." },
+      weather:    { label: "نظام مراقبة الطقس",              details: "يقدم رؤى دقيقة للطقس لتحسين التخطيط والاستعداد." },
+      underground:{ label: "المراقبة تحت الأرض",             details: "يدير الآبار والصهاريج لاستخدام المياه الجوفية وتوزيعها بكفاءة." },
+      epermit:    { label: "الخدمات الإلكترونية",            details: "يتيح للمواطنين والشركات الوصول السهل إلى الخدمات البيئية في أي وقت." },
+    }
+  }
+};
+
 function App() {
   const [activeKey, setActiveKey] = useState("biodiv");
+  const [lang, setLang] = useState("en");
+  const t = translations[lang];
+  const isAr = lang === "ar";
+  const toggleLang = () => setLang(prev => prev === "en" ? "ar" : "en");
+
   const [dimensions, setDimensions] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1200,
     height: typeof window !== "undefined" ? window.innerHeight : 800
@@ -270,7 +333,7 @@ function App() {
     for (let i = 0; i < windowSize; i++) {
       arr.push(allKeys[(startIndex + i) % allKeys.length]);
     }
-    return arr;
+    return isAr ? arr.reverse() : arr;
   };
   const visibleKeys = getVisibleKeys();
 
@@ -300,7 +363,7 @@ function App() {
   useEffect(() => {
     setSubtitleShow(false);
     const timer = setTimeout(() => {
-      const meta = nodeMeta[activeKey];
+      const meta = t.nodes[activeKey];
       if (meta) {
         const parts = meta.label.split(" ");
         const html = parts.length > 1
@@ -311,7 +374,7 @@ function App() {
       }
     }, 500);
     return () => clearTimeout(timer);
-  }, [activeKey]);
+  }, [activeKey, lang]);
 
   // Manage video loading and playback
   useEffect(() => {
@@ -508,7 +571,7 @@ function App() {
   const pathD = positions.length >= 2 ? catmullRom2bezier(positions, 0.6) : "";
 
   return (
-    <main>
+    <main dir={isAr ? "rtl" : "ltr"} lang={lang}>
       <div className="fea-hero" id="hero" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         
         {/* Dynamic Video Element */}
@@ -533,8 +596,23 @@ function App() {
           <div className="fea-logo">
             <img src="images/fea-logo.svg" alt="FEA" loading="lazy" decoding="async" />
           </div>
-          <div className="fea-title --landscape">Dynamic Unified Data Platform</div>
+          <div className="fea-title --landscape">{t.headerTitle}</div>
           <div className="head-nav">
+            {/* Language Toggle Pill */}
+            <div
+              className="lang-toggle"
+              id="langToggle"
+              onClick={toggleLang}
+              role="button"
+              aria-label="Toggle language"
+              tabIndex={0}
+              onKeyUp={(e) => { if (e.key === "Enter" || e.key === " ") toggleLang(); }}
+            >
+              <span className={`lang-opt ${lang === "en" ? "active" : ""}`}>EN</span>
+              <span className="lang-divider">|</span>
+              <span dir="rtl" className={`lang-opt ${lang === "ar" ? "active" : ""}`}>عربي</span>
+            </div>
+
             <div className="fea-dropdown">
               <button
                 type="button"
@@ -553,23 +631,23 @@ function App() {
                 id="hamberMenu"
                 ref={hamberMenuRef}
               >
-                <li><a href="https://www.ecubesoftware.com/fea/biodiversity/" target="_blank" rel="noopener noreferrer"><img src="images/menu/biodiversity-ico.svg" alt="" /> Biodiversity</a></li>
-                <li><a href="https://atlas.smartgeoapps.com/FEA/mwq" target="_blank" rel="noopener noreferrer"><img src="images/menu/mwq-ico.svg" alt="" /> Marine Water Quality</a></li>
-                <li><a href="https://atlas.smartgeoapps.com/FEA/air-quality" target="_blank" rel="noopener noreferrer"><img src="images/menu/aqms-ico.svg" alt="" /> Air Quality Monitoring System</a></li>
-                <li><a href="https://www.ecubesoftware.com/fea/wastemanagement/" target="_blank" rel="noopener noreferrer"><img src="images/menu/waste-m-ico.svg" alt="" /> Waste Management</a></li>
-                <li><a href="https://jawo.fea.gov.ae/" target="_blank" rel="noopener noreferrer"><img src="images/menu/wms-ico.svg" alt="" /> Weather Monitoring System</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()}><img src="images/menu/underground-m-ico.svg" alt="" /> Underground Monitoring</a></li>
-                <li><a href="https://www.ecubesoftware.com/fea/e-services/" target="_blank" rel="noopener noreferrer"><img src="images/menu/e-services-ico.svg" alt="" /> e-Services</a></li>
-                <li><a href="https://www.ecubesoftware.com/fea/soil/" target="_blank" rel="noopener noreferrer"><img src="images/menu/soil-ico.svg" alt="" /> Soil Monitoring System</a></li>
+                <li><a href="https://www.ecubesoftware.com/fea/biodiversity/" target="_blank" rel="noopener noreferrer"><img src="images/menu/biodiversity-ico.svg" alt="" /> {t.menuItems[0]}</a></li>
+                <li><a href="https://atlas.smartgeoapps.com/FEA/mwq" target="_blank" rel="noopener noreferrer"><img src="images/menu/mwq-ico.svg" alt="" /> {t.menuItems[1]}</a></li>
+                <li><a href="https://atlas.smartgeoapps.com/FEA/air-quality" target="_blank" rel="noopener noreferrer"><img src="images/menu/aqms-ico.svg" alt="" /> {t.menuItems[2]}</a></li>
+                <li><a href="https://www.ecubesoftware.com/fea/wastemanagement/" target="_blank" rel="noopener noreferrer"><img src="images/menu/waste-m-ico.svg" alt="" /> {t.menuItems[3]}</a></li>
+                <li><a href="https://jawo.fea.gov.ae/" target="_blank" rel="noopener noreferrer"><img src="images/menu/wms-ico.svg" alt="" /> {t.menuItems[4]}</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()}><img src="images/menu/underground-m-ico.svg" alt="" /> {t.menuItems[5]}</a></li>
+                <li><a href="https://www.ecubesoftware.com/fea/e-services/" target="_blank" rel="noopener noreferrer"><img src="images/menu/e-services-ico.svg" alt="" /> {t.menuItems[6]}</a></li>
+                <li><a href="https://www.ecubesoftware.com/fea/soil/" target="_blank" rel="noopener noreferrer"><img src="images/menu/soil-ico.svg" alt="" /> {t.menuItems[7]}</a></li>
               </ul>
             </div>
-            
+
             <button type="button" id="loginBtn" className="loginBtn" onClick={handleLoginClick}>
-              <label style={{ cursor: "pointer" }}>Login</label>
+              <label style={{ cursor: "pointer" }}>{t.login}</label>
             </button>
-            
+
             <div id="customAlert" className="custom-alert" style={{ display: alertVisible ? "block" : "none" }}>
-              <span id="customAlertMsg">Coming Soon!</span>
+              <span id="customAlertMsg">{t.comingSoon}</span>
               <button id="closeAlert" className="close-btn" onClick={handleCloseAlert}>&times;</button>
             </div>
           </div>
@@ -577,7 +655,7 @@ function App() {
 
         {/* Fujairah Text Elements */}
         <div className="heroDecoImgBlk">
-          <h3 className="fujText">Fujairah</h3>
+          <h3 className="fujText">{t.fujText}</h3>
           <h3 dir="rtl" lang="ar" className="fujArabic">الفجيرة</h3>
         </div>
 
@@ -588,7 +666,7 @@ function App() {
 
         {/* Main Stage & Carousel Content */}
         <div className="fea-content">
-          <div className="fea-title --portrait">Fujairah Environment Authority Dynamic Unified Data Platform</div>
+          <div className="fea-title --portrait">{t.portraitTitle}</div>
           <div className="fea-stage" id="stage" ref={stageRef}>
             <div
               className={`fea-subtitle ${subtitleShow ? "show" : ""}`}
@@ -679,15 +757,15 @@ function App() {
                       <img src={meta.icon} alt={key} loading="lazy" decoding="async" />
                     </div>
                     <div className="fea-nodeBlk">
-                      <h5 className="fea-label">{meta.label}</h5>
-                      <p className="fea-details">{meta.details}</p>
+                      <h5 className="fea-nodeName">{t.nodes[key]?.label || meta.label}</h5>
+                      <p className="fea-details">{t.nodes[key]?.details || meta.details}</p>
                     </div>
                     {isActive && (
                       <button className="fea-explore" id="explore" onClick={handleExploreClick}>
                         <span className="fea-circle">
                           <img src="images/btn-arrow.gif" alt="" />
                         </span>
-                        <span className="text">Explore More</span>
+                        <span className="text">{t.explorMore}</span>
                       </button>
                     )}
                   </div>
@@ -731,8 +809,8 @@ function App() {
           <img src="images/fea-logo.svg" alt="FEA" loading="lazy" decoding="async" />
         </div>
         <div className="copyBlk">
-          <h5>FUJAIRAH ENVIRONMENT AUTHORITY</h5>
-          <p>Copyright 2025 Fujairah Environment Authority. All rights reserved.</p>
+          <h5>{t.footerOrg}</h5>
+          <p>{t.footerCopy}</p>
         </div>
         <div className="socialBlk">
           <a href="https://x.com/fuj_environment" target="_blank" rel="noopener noreferrer"><img alt="twitter" src="images/footer/twitter.svg" /></a>
